@@ -8,8 +8,20 @@ variable "regions" {
   default = ["us-east-1", "us-west-2"]
 }
 
-variable "cider" {
-  description = "user input for cider applied new resource"
+variable "cidr" {
+  description = "user input for cidr applied new resource"
+  type = string
+
+}
+
+variable "pub_sub_cidr" {
+  description = "user input for public subnet cidr applied new resource"
+  type = string
+
+}
+
+variable "pri_sub_cidr" {
+  description = "user input for private subnet cidr applied new resource"
   type = string
 
 }
@@ -26,4 +38,15 @@ variable "dns_hostname" {
 variable "vpc_name" {
   description = "Name of the VPC"
   type        = string
+}
+
+variable "Az" {
+    description = "availability zone"
+    type        = list(string)
+    default = [ "us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d", "us-east-1e" , "us-east-1f" ]
+}
+
+variable "public_ip_on_launch" {
+  description = "Allocate a public IP address on instance launch"
+  type        = bool
 }
