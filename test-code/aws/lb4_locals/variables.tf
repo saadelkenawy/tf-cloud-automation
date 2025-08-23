@@ -4,6 +4,40 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
+variable "def_prod" {
+  description = "production"
+  type = string
+  default = "prod"
+
+}
+
+variable "def_remote_user" {
+  description = "remote user"
+  type = string
+  default = "Terraform"
+}
+
+variable "def_dev" {
+  description = "development"
+  type = string
+  default = "dev"
+  
+}
+
+variable "def_pri" {
+  description = "private"
+  type = string
+  default = "pri"
+}
+
+variable "def_pub" {
+  description = "public"
+  type = string
+  default = "pub"
+  
+}
+
+
 variable "regions" {
   type    = list(string)
   default = ["us-east-1", "us-west-2"]
