@@ -2,6 +2,12 @@ provider "aws" {
   region = var.aws_region
 }
 
+data "aws_region" "current" {
+}
+data "aws_availability_zones" "available_az" {
+  state = "available"
+}
+
 locals {
   timestamp = timestamp()
   vpc_name  = "${var.def_prod}_tfvpc"
@@ -19,39 +25,52 @@ resource "aws_vpc" "tf_vpc" {
 
   tags = {
     Name = local.vpc_name
-    user = local.remote_user
+    User = local.remote_user
+    Region_saad = data.aws_region.current.region
 
   }
 }
-resource "aws_subnet" "pub_sub" {
+
+resource "aws_subnet" "private_subnet" {
   vpc_id = aws_vpc.tf_vpc.id
-  cidr_block = var.pub_sub_cidr
-  availability_zone = var.Az[0]
-  map_public_ip_on_launch = var.public_ip_on_launch
-
+  for_each = var.private_subnets
+  cidr_block = cidrsubnet(var.vpc_cidr, 8, each.value)
+  availability_zone = tolist(data.aws_availability_zones.available_az.names)[each.value]
   tags = {
-    Name = local.subnet_pub
+    Name = each.key
+    User = local.remote_user
   }
 }
 
+# resource "aws_subnet" "pub_sub" {
+#   vpc_id = aws_vpc.tf_vpc.id
+#   cidr_block = var.pub_sub_cidr
+#   availability_zone = var.Az[0]
+#   map_public_ip_on_launch = var.public_ip_on_launch
 
-resource "aws_subnet" "pri_sub" {
-  vpc_id = aws_vpc.tf_vpc.id
-  cidr_block = var.pri_sub_cidr
-  availability_zone = var.Az[0]
-
-  tags = {
-    Name = local.subnet_pri
-  }
-}
-
-
+#   tags = {
+#     Name = local.subnet_pub
+#   }
+# }
 
 
-  resource "aws_internet_gateway" "igw" {
-    vpc_id = aws_vpc.tf_vpc.id
-    tags = {
-      Name = "tf_igw"
-    }
+# resource "aws_subnet" "pri_sub" {
+#   vpc_id = aws_vpc.tf_vpc.id
+#   cidr_block = var.pri_sub_cidr
+#   availability_zone = var.Az[0]
 
-  }
+#   tags = {
+#     Name = local.subnet_pri
+#   }
+# }
+
+
+
+
+#   resource "aws_internet_gateway" "igw" {
+#     vpc_id = aws_vpc.tf_vpc.id
+#     tags = {
+#       Name = "tf_igw"
+#     }
+
+#   }
