@@ -87,3 +87,13 @@ variable "public_ip_on_launch" {
   type        = bool
   default = false
 }
+
+variable "private_subnets" {
+  description = "List of private subnets"
+  type        = map(number)
+  default  = {
+    subnet1 = 0
+    subnet2 = 1
+    subnet3 = 2
+  }
+}
