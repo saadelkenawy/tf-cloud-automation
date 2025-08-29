@@ -1,20 +1,15 @@
- module "subnet_addrs" {
-  source  = "hashicorp/subnets/cidr"
-  version = "1.0.0"
-  
-  base_cidr_block = "10.0.0.0/22"
-  networks = [
-  {
-    name     = "module_network_a"
-    new_bits = 2
-  },
-  {
-    name     = "module_network_b"
-    new_bits = 2
-  },
- ]
+provider "aws" {
+  region = var.Region
 }
 
-output "subnet_addrs" {
-  value = module.subnet_addrs.network_cidr_blocks
+resource "aws_vpc" "tf_vpc" {
+  cidr_block = var.vpc_cidr
+  enable_dns_hostnames = var.enable_vpc_hostname
+  enable_dns_support = var.enable_vpc_dns_support
+
+  tags = {
+    Name = "tf_vpc"
+    User = "Terraform"
+  } 
 }
+
